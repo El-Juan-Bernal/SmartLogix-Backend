@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/detalle-producto")
-public class BffController {
+public class BffCatalogoController {
 
     @Autowired
     private CatalogoClient catalogoClient;
