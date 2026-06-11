@@ -1,5 +1,6 @@
 package com.jaba.ms_pagos.controller;
 
+import com.jaba.ms_pagos.dto.PagoRequestDTO;
 import com.jaba.ms_pagos.service.PagoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,30 +16,52 @@ public class PagoController {
     private PagoService pagoService;
 
     @PostMapping("/procesar")
-    public ResponseEntity<Map<String, Object>> procesarPago(
-            @RequestParam String pasarela,
-            @RequestParam Double monto,
-            @RequestParam String ordenCompra,
-            @RequestParam Long usuarioId,
-            @RequestParam String clienteNombre,   // <-- Nuevo: Nombre del cliente
-            @RequestParam String clienteEmail,    // <-- Nuevo: Correo para el ms_mensajeria
-            @RequestParam String tipoDocumento,   // <-- Nuevo: "BOLETA" o "FACTURA"
-            @RequestParam(required = false) String rutEmpresa,   // <-- Nuevo: Opcional si es factura
-            @RequestParam(required = false) String razonSocial  // <-- Nuevo: Opcional si es factura
-    ) { 
-
+    public ResponseEntity<Map<String, Object>> procesarPago(@RequestBody PagoRequestDTO request) {
+        
         Map<String, Object> resultado;
 
-        // Pasamos los nuevos datos dinámicos al servicio para que se guarden en la base de datos
-        switch (pasarela.toLowerCase()) {
+        // Validamos que la pasarela no sea nula antes de convertir a minúsculas
+        if (request.getPasarela() == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "La pasarela es obligatoria."));
+        }
+
+        // Pasamos el objeto DTO completo al servicio
+        switch (request.getPasarela().toLowerCase()) {
             case "webpay":
-                resultado = pagoService.procesarPagoWebpay(monto, ordenCompra, usuarioId, clienteNombre, clienteEmail, tipoDocumento, rutEmpresa, razonSocial);
+                resultado = pagoService.procesarPagoWebpay(
+                    request.getMonto(), 
+                    request.getOrdenCompra(), 
+                    Long.valueOf(request.getUsuarioId()), 
+                    request.getClienteNombre(), 
+                    request.getClienteEmail(), 
+                    request.getTipoDocumento(), 
+                    request.getRutEmpresa(), 
+                    request.getRazonSocial()
+                );
                 break;
             case "mercadopago":
-                resultado = pagoService.procesarPagoMercadoPago(monto, ordenCompra, usuarioId, clienteNombre, clienteEmail, tipoDocumento, rutEmpresa, razonSocial);
+                resultado = pagoService.procesarPagoMercadoPago(
+                    request.getMonto(), 
+                    request.getOrdenCompra(), 
+                    Long.valueOf(request.getUsuarioId()), 
+                    request.getClienteNombre(), 
+                    request.getClienteEmail(), 
+                    request.getTipoDocumento(), 
+                    request.getRutEmpresa(), 
+                    request.getRazonSocial()
+                );
                 break;
             case "khipu":
-                resultado = pagoService.procesarPagoKhipu(monto, ordenCompra, usuarioId, clienteNombre, clienteEmail, tipoDocumento, rutEmpresa, razonSocial);
+                resultado = pagoService.procesarPagoKhipu(
+                    request.getMonto(), 
+                    request.getOrdenCompra(), 
+                    Long.valueOf(request.getUsuarioId()), 
+                    request.getClienteNombre(), 
+                    request.getClienteEmail(), 
+                    request.getTipoDocumento(), 
+                    request.getRutEmpresa(), 
+                    request.getRazonSocial()
+                );
                 break;
             default:
                 return ResponseEntity.badRequest().body(Map.of("error", "Pasarela no soportada."));
@@ -53,8 +76,7 @@ public class PagoController {
     @PostMapping("/webhook/confirmar/{ordenCompra}")
     public ResponseEntity<Map<String, Object>> simularConfirmacionBanco(@PathVariable String ordenCompra) {
         
-        // El webhook solo recibe la ordenCompra porque irá a buscar el registro a la base de datos,
-        // el cual ya tendrá el nombre, email y tipo de documento guardados gracias al paso anterior.
+        // El webhook recibe solo la ordenCompra para buscar el registro y proceder con la emisión
         Map<String, Object> resultado = pagoService.confirmarPagoYEmitirDocumento(ordenCompra);
         
         return ResponseEntity.ok(resultado);

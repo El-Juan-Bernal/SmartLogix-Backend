@@ -1,6 +1,6 @@
 package com.jaba.bff_web.client;
 
-import com.jaba.bff_web.dto.PagoRequestDTO; // <-- Importación del DTO
+import com.jaba.bff_web.dto.PagoRequestDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +14,7 @@ public interface PagosClient {
     @GetMapping("/{id}")
     Map<String, Object> obtenerPagoPorId(@PathVariable("id") Long id);
 
-    @PostMapping
+    // Actualizado: Ahora apunta a la ruta /procesar y envía el objeto en el cuerpo
+    @PostMapping("/procesar")
     Map<String, Object> procesarPago(@RequestBody PagoRequestDTO pago);
 }
-
