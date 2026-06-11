@@ -1,4 +1,4 @@
-package com.jaba.bff_web.dto; // O el paquete correspondiente en cada proyecto
+package com.jaba.ms_pagos.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,3 +18,5 @@ public class PagoRequestDTO {
     private String rutEmpresa;
     private String razonSocial;
 }
+
+

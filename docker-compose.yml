@@ -1,12 +1,12 @@
 version: '3.8'
 
 services:
-  # 1. BASE DE DATOS CENTRAL (Una instancia para los 3 microservicios)
+  # 1. BASE DE DATOS CENTRAL
   mysql_server:
     image: mysql:8.0
     container_name: mysql_db_smartlogix
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes" # Permite entrar sin clave, como en tu XAMPP
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     ports:
       - "3306:3306"
     networks:
@@ -17,8 +17,8 @@ services:
     image: rabbitmq:3-management
     container_name: rabbitmq_smartlogix
     ports:
-      - "5672:5672"   # Puerto de comunicación interna
-      - "15672:15672" # Puerto de la interfaz web para ver las colas
+      - "5672:5672"
+      - "15672:15672"
     networks:
       - smartlogix_net
 
@@ -44,7 +44,7 @@ services:
     environment:
       - DB_HOST=mysql_server
       - RABBITMQ_HOST=rabbitmq_server
-      - SLACK_URL=http://localhost_falso # Aquí podrías poner tu URL real si quieres
+      - SLACK_WEBHOOK_URL=TU_URL_DE_SLACK_AQUI
     depends_on:
       - mysql_server
       - rabbitmq_server
@@ -61,7 +61,7 @@ services:
       - DB_HOST=mysql_server
       - RABBITMQ_HOST=rabbitmq_server
       - MAIL_USER=mensajeria.smartlogix@gmail.com
-      - MAIL_PASS=zvps zmyl yyjk exwo # Tus 16 letras
+      - MAIL_PASS=TU_PASSWORD_AQUI
     depends_on:
       - mysql_server
       - rabbitmq_server
@@ -75,13 +75,17 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - URL_MS_CATALOGO=http://ms-catalogo:8088/api/productos # Ruta interna al contenedor
+      - URL_MS_CATALOGO=http://ms-catalogo:8088/api/productos
+      - URL_MS_PAGOS=http://ms-pagos:8082/api/pagos
+      - URL_MS_MENSAJERIA=http://ms-mensajeria:8084/api/mensajeria
     depends_on:
       - ms-catalogo
+      - ms-pagos
+      - ms-mensajeria
     networks:
       - smartlogix_net
 
-# Definimos la red privada
 networks:
   smartlogix_net:
     driver: bridge
+    
