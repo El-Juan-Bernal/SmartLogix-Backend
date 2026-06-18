@@ -1,5 +1,6 @@
 package com.jaba.ms_envios.listener;
 
+import com.jaba.ms_envios.config.RabbitMQConfig;
 import com.jaba.ms_envios.dto.PagoConfirmadoDTO;
 import com.jaba.ms_envios.factory.Despacho;
 import com.jaba.ms_envios.factory.DespachoFactory;
@@ -16,7 +17,7 @@ public class EnvioListener {
     private EnvioRepository envioRepository;
 
     // Escuchamos la cola donde el ms_pagos enviará la confirmación
-    @RabbitListener(queues = "pagos.confirmados.queue")
+    @RabbitListener(queues = RabbitMQConfig.COLA_ENVIOS)
     public void procesarPagoConfirmado(PagoConfirmadoDTO pagoDTO) {
         
         System.out.println("Recibiendo confirmación de pago para orden: " + pagoDTO.getOrdenCompra());

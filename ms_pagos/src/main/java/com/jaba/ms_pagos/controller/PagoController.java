@@ -1,6 +1,7 @@
 package com.jaba.ms_pagos.controller;
 
 import com.jaba.ms_pagos.dto.PagoRequestDTO;
+import com.jaba.ms_pagos.config.RabbitMQConfig;
 import com.jaba.ms_pagos.dto.PagoConfirmadoDTO; // NUEVO: Importamos el mensajero
 import com.jaba.ms_pagos.service.PagoService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate; // NUEVO: Herramienta de RabbitMQ
@@ -48,7 +49,7 @@ public class PagoController {
                     request.getRazonSocial(),
                     request.getPedidoId(),
                     request.getDireccionDestino(),
-                    request.isRequiereExpress()
+                    Boolean.TRUE.equals(request.getRequiereExpress())
                 );
                 break;
             case "mercadopago":
@@ -63,7 +64,7 @@ public class PagoController {
                     request.getRazonSocial(),
                     request.getPedidoId(),
                     request.getDireccionDestino(),
-                    request.isRequiereExpress()
+                    Boolean.TRUE.equals(request.getRequiereExpress())
                 );
                 break;
             case "khipu":
@@ -78,7 +79,7 @@ public class PagoController {
                     request.getRazonSocial(),
                     request.getPedidoId(),
                     request.getDireccionDestino(),
-                    request.isRequiereExpress()
+                    Boolean.TRUE.equals(request.getRequiereExpress())
                 );
                 break;
             default:
@@ -116,7 +117,7 @@ public class PagoController {
             );
 
             // 5. ¡MAGIA ASÍNCRONA! Disparamos el mensaje a la cola de RabbitMQ
-            rabbitTemplate.convertAndSend("pagos.confirmados.queue", mensajeEnvio);
+            rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_PRINCIPAL, "venta.envios", mensajeEnvio);
             System.out.println("Mensaje enviado a RabbitMQ para la orden: " + ordenCompra);
         }
         

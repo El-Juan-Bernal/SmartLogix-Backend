@@ -21,6 +21,6 @@ public class PagoRequestDTO {
     // --- NUEVOS CAMPOS PARA EL ENVÍO ---
     private Long pedidoId;           // Para saber qué pedido es en la base de datos
     private String direccionDestino; // Hacia dónde va el multiconector o producto
-    private boolean requiereExpress; // Para que el Factory sepa si es urgente
+    private Boolean requiereExpress; // Para que el Factory sepa si es urgente
 }
 

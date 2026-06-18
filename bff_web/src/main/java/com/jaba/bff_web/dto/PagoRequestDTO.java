@@ -1,4 +1,4 @@
-package com.jaba.bff_web.dto; // O el paquete correspondiente en cada proyecto
+package com.jaba.bff_web.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,10 +11,14 @@ public class PagoRequestDTO {
     private String pasarela;
     private Double monto;
     private String ordenCompra;
-    private String usuarioId; // Asegúrate de que el tipo sea String en AMBOS lados
+    private String usuarioId;
     private String clienteNombre;
     private String clienteEmail;
     private String tipoDocumento;
     private String rutEmpresa;
     private String razonSocial;
+    private Long pedidoId;
+    private String direccionDestino;
+    private Boolean requiereExpress;
 }
+
