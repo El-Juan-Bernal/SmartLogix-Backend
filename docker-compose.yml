@@ -85,7 +85,23 @@ services:
     networks:
       - smartlogix_net
 
+  # 7. MICROSERVICIO DE ENVÍOS (¡NUEVO!)
+  ms-envios:
+    build: ./ms_envios
+    container_name: ms_envios_app
+    ports:
+      - "8083:8083"
+    environment:
+      - DB_HOST=mysql_server
+      - RABBITMQ_HOST=rabbitmq_server
+    depends_on:
+      - mysql_server
+      - rabbitmq_server
+    networks:
+      - smartlogix_net
+
 networks:
   smartlogix_net:
     driver: bridge
+
     

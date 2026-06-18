@@ -11,12 +11,16 @@ public class PagoRequestDTO {
     private String pasarela;
     private Double monto;
     private String ordenCompra;
-    private String usuarioId; // Asegúrate de que el tipo sea String en AMBOS lados
+    private String usuarioId;
     private String clienteNombre;
     private String clienteEmail;
     private String tipoDocumento;
     private String rutEmpresa;
     private String razonSocial;
+    
+    // --- NUEVOS CAMPOS PARA EL ENVÍO ---
+    private Long pedidoId;           // Para saber qué pedido es en la base de datos
+    private String direccionDestino; // Hacia dónde va el multiconector o producto
+    private boolean requiereExpress; // Para que el Factory sepa si es urgente
 }
-
 

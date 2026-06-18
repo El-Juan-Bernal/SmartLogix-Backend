@@ -52,6 +52,16 @@ public class Pago {
     @Column(name = "razon_social", nullable = true)
     private String razonSocial;
 
+    // --- NUEVOS CAMPOS LOGÍSTICOS ---
+    @Column(name = "pedido_id")
+    private Long pedidoId;
+
+    @Column(name = "direccion_destino")
+    private String direccionDestino;
+
+    @Column(name = "requiere_express")
+    private boolean requiereExpress;
+
     // Relación Uno a Muchos: cascade = CascadeType.ALL asegura que al guardar el Pago, 
     // automáticamente se guarden todos sus ítems desglosados en la base de datos.
     @Builder.Default
