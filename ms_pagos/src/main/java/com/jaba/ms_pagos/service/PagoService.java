@@ -261,7 +261,7 @@ public class PagoService {
             pago.setEstado("APROBADO");
             pago.setFolioSii(folioRespuesta);
             pdfBytes = documentoFactory.obtenerGenerador(pago.getTipoDocumento()).generarDocumento(pago);
-            mensajeRespuesta = "Pago aprobado y boleta emitida exitosamente.";
+            mensajeRespuesta = "Pago aprobado - VERSION NUEVA ";
         }
         
         pagoRepository.save(pago);

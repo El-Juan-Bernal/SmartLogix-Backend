@@ -104,4 +104,3 @@ networks:
   smartlogix_net:
     driver: bridge
 
-    

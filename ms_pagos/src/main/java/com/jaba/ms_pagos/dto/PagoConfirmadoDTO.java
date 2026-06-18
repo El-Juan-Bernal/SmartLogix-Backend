@@ -11,6 +11,6 @@ public class PagoConfirmadoDTO {
     private String ordenCompra;
     private Long pedidoId;
     private String direccionDestino; 
-    private boolean requiereExpress; 
+    private Boolean requiereExpress; 
 }
 

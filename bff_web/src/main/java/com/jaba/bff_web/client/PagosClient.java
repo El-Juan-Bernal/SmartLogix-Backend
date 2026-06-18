@@ -18,3 +18,4 @@ public interface PagosClient {
     @PostMapping("/procesar")
     Map<String, Object> procesarPago(@RequestBody PagoRequestDTO pago);
 }
+
