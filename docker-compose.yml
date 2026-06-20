@@ -18,7 +18,7 @@ services:
     container_name: rabbitmq_smartlogix
     ports:
       - "5672:5672"
-      - "15672:15672"
+      - "15672:15672" # Puerto del panel de administración web
     networks:
       - smartlogix_net
 
@@ -51,12 +51,12 @@ services:
     networks:
       - smartlogix_net
 
-  # 5. MICROSERVICIO DE MENSAJERÍA
+  # 5. MICROSERVICIO DE MENSAJERÍA (Corregido a 8083)
   ms-mensajeria:
     build: ./MS_MENSAJERIA
     container_name: ms_mensajeria_app
     ports:
-      - "8084:8084"
+      - "8083:8083"
     environment:
       - DB_HOST=mysql_server
       - RABBITMQ_HOST=rabbitmq_server
@@ -68,7 +68,58 @@ services:
     networks:
       - smartlogix_net
 
-  # 6. BACKEND FOR FRONTEND (BFF)
+  # 6. MICROSERVICIO DE ENVÍOS (Movido a 8086 para evitar colisión)
+  ms-envios:
+    build: ./ms_envios
+    container_name: ms_envios_app
+    ports:
+      - "8086:8086"
+    environment:
+      - DB_HOST=mysql_server
+      - RABBITMQ_HOST=rabbitmq_server
+    depends_on:
+      - mysql_server
+      - rabbitmq_server
+    networks:
+      - smartlogix_net
+
+  # 7. IDENTITY PROVIDER (IDP) - Bóveda de credenciales
+  ms-idp:
+    build: ./ms_idp
+    container_name: ms_idp_app
+    ports:
+      - "8084:8084"
+    environment:
+      - DB_HOST=mysql_server
+      - RABBITMQ_HOST=rabbitmq_server
+      # Sobreescribimos localhost para que Docker sepa encontrar la BD y la Cola
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_server:3306/smartlogix_idp?createDatabaseIfNotExist=true&serverTimezone=UTC
+      - SPRING_RABBITMQ_HOST=rabbitmq_server
+    depends_on:
+      - mysql_server
+      - rabbitmq_server
+    networks:
+      - smartlogix_net
+
+  # 8. MICROSERVICIO DE USUARIOS - Gestión de perfiles
+  ms-usuario:
+    build: ./ms_usuario
+    container_name: ms_usuario_app
+    ports:
+      - "8085:8085"
+    environment:
+      - DB_HOST=mysql_server
+      - RABBITMQ_HOST=rabbitmq_server
+      # Sobreescribimos localhost para que Docker sepa encontrar la BD y la Cola
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_server:3306/smartlogix_usuarios?createDatabaseIfNotExist=true&serverTimezone=UTC
+      - SPRING_RABBITMQ_HOST=rabbitmq_server
+    depends_on:
+      - mysql_server
+      - rabbitmq_server
+    networks:
+      - smartlogix_net
+
+  # 9. BACKEND FOR FRONTEND (BFF) - Director de Orquesta
   ms-bff:
     build: ./BFF_WEB
     container_name: bff_web_app
@@ -77,26 +128,15 @@ services:
     environment:
       - URL_MS_CATALOGO=http://ms-catalogo:8088/api/productos
       - URL_MS_PAGOS=http://ms-pagos:8082/api/pagos
-      - URL_MS_MENSAJERIA=http://ms-mensajeria:8084/api/mensajeria
+      - URL_MS_MENSAJERIA=http://ms-mensajeria:8083/api/mensajeria
+      - URL_MS_IDP=http://ms-idp:8084/api/auth
+      - URL_MS_USUARIO=http://ms-usuario:8085/api/usuarios
     depends_on:
       - ms-catalogo
       - ms-pagos
       - ms-mensajeria
-    networks:
-      - smartlogix_net
-
-  # 7. MICROSERVICIO DE ENVÍOS (¡NUEVO!)
-  ms-envios:
-    build: ./ms_envios
-    container_name: ms_envios_app
-    ports:
-      - "8083:8083"
-    environment:
-      - DB_HOST=mysql_server
-      - RABBITMQ_HOST=rabbitmq_server
-    depends_on:
-      - mysql_server
-      - rabbitmq_server
+      - ms-idp
+      - ms-usuario
     networks:
       - smartlogix_net
 
