@@ -1,5 +1,6 @@
 package com.jaba.ms_usuario.listener;
 
+import com.jaba.ms_usuario.config.RabbitMQConfig;
 import com.jaba.ms_usuario.dto.UsuarioRegistradoEvent;
 import com.jaba.ms_usuario.model.Usuario;
 import com.jaba.ms_usuario.repository.UsuarioRepository;
@@ -13,8 +14,8 @@ public class UsuarioEventListener {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @RabbitListener(queues = "usuario.creado.queue")
-    public void handleUsuarioRegistrado(UsuarioRegistradoEvent event) {
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_USUARIO)
+public void procesarUsuarioCreado(UsuarioRegistradoEvent event) {
         System.out.println("⚡ Evento recibido de RabbitMQ: Creando perfil para " + event.getEmail());
 
         Usuario nuevoPerfil = new Usuario();

@@ -40,12 +40,11 @@ public class AuthService {
                 usuarioGuardado.getUsername()
         );
         
-        // Asumiendo que usaremos un exchange llamado 'usuarios.exchange'
-        rabbitTemplate.convertAndSend("usuarios.exchange", "usuario.creado.routing.key", evento);
+        // ¡ACTUALIZADO! Disparamos al agrupador central con la etiqueta correcta
+        rabbitTemplate.convertAndSend("smartlogix.exchange", "usuario.creado", evento);
 
         return usuarioGuardado;
     }
-
 
     public void cambiarPassword(CambiarPasswordDTO dto) {
         UsuarioAuth usuario = usuarioAuthRepository.findByEmail(dto.getEmail())
@@ -76,7 +75,6 @@ public class AuthService {
         // (Nota: En un flujo de producción final, aquí emitiríamos un evento a ms_mensajeria en lugar de retornarla)
         return claveTemporal;
     }
-
 
 }
 
