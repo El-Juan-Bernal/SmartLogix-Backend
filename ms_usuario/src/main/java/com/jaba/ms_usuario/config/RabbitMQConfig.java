@@ -1,51 +1,50 @@
 package com.jaba.ms_usuario.config;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
-import org.springframework.amqp.support.converter.DefaultClassMapper;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import java.util.HashMap;
-import java.util.Map;
 
 @Configuration
 public class RabbitMQConfig {
 
+    // Nombres estandarizados
+    public static final String EXCHANGE_NAME = "smartlogix.exchange";
+    public static final String QUEUE_USUARIO = "smartlogix.usuario.queue";
+    public static final String QUEUE_USUARIO_DLQ = "smartlogix.usuario.dlq";
+    public static final String ROUTING_KEY_USUARIO = "usuario.creado";
+    public static final String ROUTING_KEY_USUARIO_DLQ = "usuario.dlq";
+
+    // 1. El agrupador central (Exchange)
     @Bean
-    public MessageConverter jsonMessageConverter() {
-        Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();
-        
-        // Configuramos un mapeador de clases para resolver el cruce de paquetes
-        DefaultClassMapper classMapper = new DefaultClassMapper();
-        classMapper.setTrustedPackages("*");
-        
-        Map<String, Class<?>> idClassMapping = new HashMap<>();
-        // Mapea la firma de ms_idp directamente a nuestro DTO local de ms_usuario
-        idClassMapping.put("com.jaba.ms_idp.dto.UsuarioRegistradoEvent", com.jaba.ms_usuario.dto.UsuarioRegistradoEvent.class);
-        
-        classMapper.setIdClassMapping(idClassMapping);
-        converter.setClassMapper(classMapper);
-        
-        return converter;
+    public DirectExchange smartlogixExchange() {
+        return new DirectExchange(EXCHANGE_NAME);
     }
 
+    // 2. La cola de fallos (DLQ)
     @Bean
-    public TopicExchange usuariosExchange() {
-        return new TopicExchange("usuarios.exchange");
+    public Queue usuarioDlq() {
+        return QueueBuilder.durable(QUEUE_USUARIO_DLQ).build();
     }
 
+    // 3. La cola principal (Con instrucciones de rebote hacia la DLQ)
     @Bean
-    public Queue usuarioCreadoQueue() {
-        return new Queue("usuario.creado.queue", true);
+    public Queue usuarioQueue() {
+        return QueueBuilder.durable(QUEUE_USUARIO)
+                .withArgument("x-dead-letter-exchange", EXCHANGE_NAME)
+                .withArgument("x-dead-letter-routing-key", ROUTING_KEY_USUARIO_DLQ)
+                .build();
     }
 
+    // 4. Enlace: Conectar la DLQ al Exchange
     @Bean
-    public Binding bindingUsuarioCreado(Queue usuarioCreadoQueue, TopicExchange usuariosExchange) {
-        return BindingBuilder.bind(usuarioCreadoQueue).to(usuariosExchange).with("usuario.creado.routing.key");
+    public Binding dlqBinding() {
+        return BindingBuilder.bind(usuarioDlq()).to(smartlogixExchange()).with(ROUTING_KEY_USUARIO_DLQ);
+    }
+
+    // 5. Enlace: Conectar la Cola Principal al Exchange
+    @Bean
+    public Binding usuarioBinding() {
+        return BindingBuilder.bind(usuarioQueue()).to(smartlogixExchange()).with(ROUTING_KEY_USUARIO);
     }
 }
 
