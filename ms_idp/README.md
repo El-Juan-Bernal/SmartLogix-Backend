@@ -1,7 +1,7 @@
 # 🛡️ ms_idp - Identity Provider (Proveedor de Identidad)
 
 ## Descripción
-`ms_idp` es el microservicio encargado de gestionar la bóveda de credenciales dentro de la arquitectura de SmartLogix. Actúa como la primera barrera de entrada para nuevos usuarios, garantizando el registro seguro mediante encriptación y delegando la creación del perfil de manera asíncrona.
+`ms_idp` es el microservicio encargado de gestionar la bóveda de credenciales dentro de la arquitectura de SmartLogix. Actúa como la primera barrera de entrada, garantizando el registro seguro mediante encriptación, delegando la creación asíncrona del perfil y administrando el ciclo de vida de las contraseñas (recuperación y cambio).
 
 ## 🚀 Stack Tecnológico
 * **Java 25**
@@ -11,15 +11,13 @@
 * **MySQL** (Base de datos aislada `smartlogix_idp`)
 
 ## ⚙️ Flujo de Operación
-Este microservicio recibe peticiones HTTP para registrar cuentas nuevas y se comunica asíncronamente con el resto del sistema:
+Este microservicio procesa peticiones HTTP para el manejo de credenciales y se comunica asíncronamente con el resto del sistema:
 
-1. **Recepción:** Acepta peticiones POST en `/api/auth/register` protegidas por un DTO.
-2. **Validación:** Verifica que el correo electrónico no exista previamente en la base de datos.
-3. **Seguridad:** Encripta la contraseña en texto plano utilizando `BCryptPasswordEncoder` antes de la persistencia.
-4. **Persistencia:** Guarda las credenciales básicas en la tabla `usuarios_auth`.
-5. **Emisión de Evento:** Transforma los datos del usuario en un JSON limpio utilizando `Jackson2JsonMessageConverter` y dispara el evento `UsuarioRegistradoEvent` hacia el exchange `usuarios.exchange` en RabbitMQ.
+1. **Registro (`/api/auth/register`):** Valida disponibilidad del correo, encripta la contraseña usando `BCryptPasswordEncoder`, persiste la credencial y dispara el evento `UsuarioRegistradoEvent` hacia RabbitMQ.
+2. **Cambio de Clave (`/api/auth/cambiar-password`):** Verifica que la contraseña actual coincida con el hash de la base de datos antes de permitir y encriptar la nueva.
+3. **Recuperación (`/api/auth/recuperar-password`):** Genera una clave temporal aleatoria, la encripta, la guarda y la retorna para restablecer el acceso del usuario.
 
-## 📋 Contratos de Datos
+## 📋 Contratos de Datos (DTOs)
 
 **Entrada HTTP (RegistroUsuarioDTO):**
 ```json
@@ -28,4 +26,20 @@ Este microservicio recibe peticiones HTTP para registrar cuentas nuevas y se com
   "email": "jusuario@correo.com",
   "password": "MiPasswordSeguro"
 }
+
+**Entrada HTTP (CambiarPasswordDTO):**
+{
+  "email": "jusuario@correo.com",
+  "passwordActual": "MiPasswordSeguro",
+  "passwordNueva": "NuevaPassword2026"
+}
+
+**Salida RabbitMQ (UsuarioRegistradoEvent):**
+{
+  "idAuth": 1,
+  "email": "jusuario@correo.com",
+  "username": "jusuario123"
+}
+
+## Desarrollado bajo principios de alta cohesión, bajo acoplamiento y tipado estricto. >j<
 

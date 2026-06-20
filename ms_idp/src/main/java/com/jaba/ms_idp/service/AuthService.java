@@ -1,5 +1,6 @@
 package com.jaba.ms_idp.service;
 
+import com.jaba.ms_idp.dto.CambiarPasswordDTO;
 import com.jaba.ms_idp.dto.RegistroUsuarioDTO;
 import com.jaba.ms_idp.dto.UsuarioRegistradoEvent;
 import com.jaba.ms_idp.model.UsuarioAuth;
@@ -44,5 +45,38 @@ public class AuthService {
 
         return usuarioGuardado;
     }
+
+
+    public void cambiarPassword(CambiarPasswordDTO dto) {
+        UsuarioAuth usuario = usuarioAuthRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("Error: Usuario no encontrado."));
+
+        // Verificamos que la contraseña actual ingresada coincida con el hash de la BD
+        if (!passwordEncoder.matches(dto.getPasswordActual(), usuario.getPassword())) {
+            throw new IllegalArgumentException("Error: La contraseña actual es incorrecta.");
+        }
+
+        // Encriptamos y guardamos la nueva
+        usuario.setPassword(passwordEncoder.encode(dto.getPasswordNueva()));
+        usuarioAuthRepository.save(usuario);
+    }
+
+    public String recuperarPassword(String email) {
+        UsuarioAuth usuario = usuarioAuthRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Error: No existe una cuenta con ese correo electrónico."));
+
+        // Generamos una clave temporal aleatoria de 8 caracteres
+        String claveTemporal = java.util.UUID.randomUUID().toString().substring(0, 8);
+        
+        // Encriptamos y guardamos la clave temporal
+        usuario.setPassword(passwordEncoder.encode(claveTemporal));
+        usuarioAuthRepository.save(usuario);
+
+        // Devolvemos la clave en texto plano. 
+        // (Nota: En un flujo de producción final, aquí emitiríamos un evento a ms_mensajeria en lugar de retornarla)
+        return claveTemporal;
+    }
+
+
 }
 

@@ -7,7 +7,10 @@ import java.util.Optional;
 public interface UsuarioAuthRepository extends JpaRepository<UsuarioAuth, Long> {
     Optional<UsuarioAuth> findByUsername(String username);
     
-    // Esta línea es la magia nueva que nos dirá si el correo ya está registrado
+    // Verifica si el correo ya está registrado
     boolean existsByEmail(String email);
+
+    // Para buscar el registro completo por correo
+    Optional<UsuarioAuth> findByEmail(String email);
 }
 
