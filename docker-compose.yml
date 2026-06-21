@@ -140,6 +140,21 @@ services:
     networks:
       - smartlogix_net
 
+  # 10. GESTOR DE BASE DE DATOS (phpMyAdmin)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin_smartlogix
+    ports:
+      - "8090:80"
+    environment:
+      PMA_HOST: mysql_server
+      PMA_USER: root
+      PMA_NO_PASSWORD: "true"
+    depends_on:
+      - mysql_server
+    networks:
+      - smartlogix_net
+
 networks:
   smartlogix_net:
     driver: bridge
