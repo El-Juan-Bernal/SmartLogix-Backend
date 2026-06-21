@@ -1,12 +1,22 @@
-# Usamos una imagen oficial y ligera de Java
-# (Asegúrate de que la versión coincida con el Java que usas en tu PC)
-FROM eclipse-temurin:25-jdk-alpine
-
-# Creamos una carpeta de trabajo dentro del contenedor
+# Etapa 1: Construcción y autocompilación
+FROM eclipse-temurin:25-jdk-alpine AS build
 WORKDIR /app
 
-# Copiamos el archivo .jar compilado desde tu carpeta target hacia el contenedor
-COPY target/*.jar app.jar
+# Copiamos todo el código fuente actual
+COPY . .
 
-# Le decimos al contenedor el comando exacto para iniciar el microservicio
+# Compilamos el .jar fresco dentro del contenedor
+RUN chmod +x ./mvnw
+RUN ./mvnw clean package -DskipTests
+
+# Etapa 2: Ejecución liviana
+FROM eclipse-temurin:25-jre-alpine
+WORKDIR /app
+
+# Tomamos el .jar recién horneado de la etapa 1
+COPY --from=build /app/target/*.jar app.jar
+
+EXPOSE 8080
+
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
