@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Recuperación de Contraseña</title>
+</head>
+<body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f7f9fc; padding: 40px 20px; text-align: center; margin: 0;">
+    <div style="background-color: #ffffff; padding: 40px; border-radius: 16px; max-width: 500px; margin: auto; box-shadow: 0px 8px 24px rgba(0,0,0,0.04);">
+        
+        <h2 style="color: #2d3748; margin-bottom: 20px; font-weight: 600;">¡Hola, <span th:text="${username}">Usuario</span>! 👋</h2>
+        
+        <p style="color: #4a5568; font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
+            Hemos recibido una solicitud para recuperar tu acceso. No te preocupes, ¡es muy fácil volver a entrar!
+        </p>
+        
+        <p style="color: #4a5568; font-size: 15px; margin-bottom: 10px;">Tu nueva clave temporal es:</p>
+        
+        <div style="background-color: #ebf4ff; color: #3182ce; font-size: 28px; font-weight: bold; padding: 16px; margin: 0 auto 24px auto; border-radius: 8px; letter-spacing: 4px; border: 1px dashed #bee3f8;" th:text="${claveTemporal}">
+            12345678
+        </div>
+        
+        <p style="color: #a0aec0; font-size: 13px; line-height: 1.5; margin-bottom: 30px;">
+            Te recomendamos cambiar esta contraseña desde la configuración de tu perfil en cuanto inicies sesión.
+        </p>
+        
+        <hr style="border: none; border-top: 1px solid #edf2f7; margin: 30px 0;">
+        
+        <div style="font-weight: 800; font-size: 24px; color: #cbd5e0; letter-spacing: 2px;">
+            &gt;j&lt;
+        </div>
+    </div>
+</body>
+</html>
+

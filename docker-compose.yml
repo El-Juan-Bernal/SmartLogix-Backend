@@ -51,7 +51,7 @@ services:
     networks:
       - smartlogix_net
 
-  # 5. MICROSERVICIO DE MENSAJERÍA (Corregido a 8083)
+  # 5. MICROSERVICIO DE MENSAJERÍA
   ms-mensajeria:
     build: ./MS_MENSAJERIA
     container_name: ms_mensajeria_app
@@ -61,14 +61,14 @@ services:
       - DB_HOST=mysql_server
       - RABBITMQ_HOST=rabbitmq_server
       - MAIL_USER=mensajeria.smartlogix@gmail.com
-      - MAIL_PASS=TU_PASSWORD_AQUI
+      - MAIL_PASS=exmgrnggeenbtlit
     depends_on:
       - mysql_server
       - rabbitmq_server
     networks:
       - smartlogix_net
 
-  # 6. MICROSERVICIO DE ENVÍOS (Movido a 8086 para evitar colisión)
+  # 6. MICROSERVICIO DE ENVÍOS
   ms-envios:
     build: ./ms_envios
     container_name: ms_envios_app

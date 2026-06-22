@@ -1,6 +1,7 @@
 package com.jaba.ms_idp.service;
 
 import com.jaba.ms_idp.dto.CambiarPasswordDTO;
+import com.jaba.ms_idp.dto.PasswordRecuperadaEvent;
 import com.jaba.ms_idp.dto.RegistroUsuarioDTO;
 import com.jaba.ms_idp.dto.UsuarioRegistradoEvent;
 import com.jaba.ms_idp.model.UsuarioAuth;
@@ -60,6 +61,7 @@ public class AuthService {
         usuarioAuthRepository.save(usuario);
     }
 
+    // NUEVO MÉTODO PARA RECUPERAR CONTRASEÑA
     public String recuperarPassword(String email) {
         UsuarioAuth usuario = usuarioAuthRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Error: No existe una cuenta con ese correo electrónico."));
@@ -67,13 +69,22 @@ public class AuthService {
         // Generamos una clave temporal aleatoria de 8 caracteres
         String claveTemporal = java.util.UUID.randomUUID().toString().substring(0, 8);
         
-        // Encriptamos y guardamos la clave temporal
+        // Encriptamos y guardamos la clave temporal en la base de datos
         usuario.setPassword(passwordEncoder.encode(claveTemporal));
         usuarioAuthRepository.save(usuario);
 
-        // Devolvemos la clave en texto plano. 
-        // (Nota: En un flujo de producción final, aquí emitiríamos un evento a ms_mensajeria en lugar de retornarla)
-        return claveTemporal;
+        // ¡NUEVO! Construimos el evento asíncrono con los datos del usuario
+        PasswordRecuperadaEvent evento = new PasswordRecuperadaEvent(
+                usuario.getEmail(),
+                usuario.getUsername(),
+                claveTemporal
+        );
+        
+        // ¡NUEVO! Disparamos el evento al agrupador central con la nueva etiqueta 'usuario.recuperar'
+        rabbitTemplate.convertAndSend("smartlogix.exchange", "usuario.recuperar", evento);
+
+        // Por seguridad, nunca retornamos la clave temporal al cliente/frontend
+        return "Si el correo existe, se ha enviado una clave temporal para la recuperación de su cuenta.";
     }
 
 }

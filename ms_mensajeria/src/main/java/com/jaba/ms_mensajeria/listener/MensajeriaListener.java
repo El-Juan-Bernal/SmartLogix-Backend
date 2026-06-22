@@ -1,4 +1,4 @@
-package com.jaba.ms_mensajeria.messaging;
+package com.jaba.ms_mensajeria.listener;
 
 import com.jaba.ms_mensajeria.event.VentaAprobadaEvent;
 import com.jaba.ms_mensajeria.factory.NotificacionEmail;
