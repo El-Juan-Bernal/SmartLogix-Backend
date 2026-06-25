@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 public class BffAuthController {
@@ -27,6 +29,22 @@ public class BffAuthController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error de comunicación con el servicio de identidad: " + e.getMessage());
+        }
+    }
+
+    // NUEVO: Endpoint puente para el inicio de sesión
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> credenciales) {
+        try {
+            // El BFF actúa como puente y devuelve exactamente lo que responde el ms_idp
+            Object respuesta = authClient.login(credenciales);
+            return ResponseEntity.ok(respuesta);
+        } catch (FeignException.Unauthorized e) {
+            // Capturamos el error 401 de credenciales incorrectas que envía el ms_idp
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.contentUTF8());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al procesar el login: " + e.getMessage());
         }
     }
 
