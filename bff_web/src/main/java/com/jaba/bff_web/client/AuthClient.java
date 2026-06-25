@@ -8,11 +8,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Map;
+
 @FeignClient(name = "ms-idp", url = "${url.ms.idp}")
 public interface AuthClient {
 
     @PostMapping("/register")
     String registrar(@RequestBody RegistroUsuarioDTO dto);
+
+    // NUEVO: Ruta para procesar el login
+    @PostMapping("/login")
+    Object login(@RequestBody Map<String, String> credenciales);
 
     // NUEVO: Ruta para cambiar contraseña
     @PutMapping("/cambiar-password")

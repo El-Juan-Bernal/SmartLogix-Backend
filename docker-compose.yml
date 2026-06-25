@@ -51,7 +51,7 @@ services:
     networks:
       - smartlogix_net
 
-  # 5. MICROSERVICIO DE MENSAJERÍA (Corregido a 8083)
+  # 5. MICROSERVICIO DE MENSAJERÍA
   ms-mensajeria:
     build: ./MS_MENSAJERIA
     container_name: ms_mensajeria_app
@@ -68,7 +68,7 @@ services:
     networks:
       - smartlogix_net
 
-  # 6. MICROSERVICIO DE ENVÍOS (Movido a 8086 para evitar colisión)
+  # 6. MICROSERVICIO DE ENVÍOS
   ms-envios:
     build: ./ms_envios
     container_name: ms_envios_app
@@ -129,7 +129,7 @@ services:
       - URL_MS_CATALOGO=http://ms-catalogo:8088/api/productos
       - URL_MS_PAGOS=http://ms-pagos:8082/api/pagos
       - URL_MS_MENSAJERIA=http://ms-mensajeria:8083/api/mensajeria
-      - URL_MS_IDP=http://ms-idp:8084/api/auth
+      - URL_MS_IDP=http://ms-idp:8084/api/v1/auth
       - URL_MS_USUARIO=http://ms-usuario:8085/api/usuarios
     depends_on:
       - ms-catalogo
