@@ -24,7 +24,7 @@ public class ProductoController {
             @RequestParam(required = false) String categoria,
             @RequestParam(required = false) String busqueda) {
         
-        // Si el frontend envía "?categoria=poleras", filtramos por categoría
+        // Si el frontend envía "?categoria=periferico", filtramos por categoría
         if (categoria != null && !categoria.trim().isEmpty()) {
             return productoRepository.findByCategoriaIgnoreCaseAndActivoTrue(categoria);
         } 
@@ -102,6 +102,5 @@ public class ProductoController {
         }).orElse(ResponseEntity.notFound().build());
     }
 }
- 
 
-//PRUEBA DE FEATURE MS CATALGO
+
