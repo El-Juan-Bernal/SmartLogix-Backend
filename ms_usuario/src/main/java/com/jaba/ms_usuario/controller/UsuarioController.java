@@ -56,13 +56,31 @@ public class UsuarioController {
         return usuarioRepository.findAll();
     }
 
-    @PostMapping("/{usuarioId}/direcciones")
-    public ResponseEntity<?> agregarNuevaDireccion(@PathVariable Long usuarioId, @Valid @RequestBody Direccion nuevaDireccion) {
-        return usuarioRepository.findById(usuarioId).map(usuario -> {
+    @PostMapping("/auth/{authId}/direcciones")
+    public ResponseEntity<?> agregarNuevaDireccion(@PathVariable Long authId, @Valid @RequestBody Direccion nuevaDireccion) {
+        var usuarioOpt = usuarioRepository.findByAuthId(authId);
+        
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
             usuario.agregarDireccion(nuevaDireccion);
             usuarioRepository.save(usuario);
             return ResponseEntity.ok("Dirección agregada exitosamente a la libreta");
-        }).orElse(ResponseEntity.badRequest().body("Error: Usuario no encontrado."));
+        } else {
+            return ResponseEntity.badRequest().body("Error: Usuario no encontrado.");
+        }
+    }
+
+    // Endpoint para obtener las direcciones de un usuario usando su authId (el ID de su token)
+    @GetMapping("/auth/{authId}/direcciones")
+    public ResponseEntity<?> obtenerDireccionesPorAuthId(@PathVariable Long authId) {
+        var usuarioOpt = usuarioRepository.findByAuthId(authId);
+        
+        if (usuarioOpt.isPresent()) {
+            // Si el usuario existe, devolvemos su lista de direcciones (puede estar vacía, y eso está bien)
+            return ResponseEntity.ok(usuarioOpt.get().getDirecciones());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
 
