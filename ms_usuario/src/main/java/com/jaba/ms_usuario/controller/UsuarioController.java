@@ -82,5 +82,56 @@ public class UsuarioController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // Endpoint para eliminar una dirección específica de la libreta del usuario
+    @DeleteMapping("/auth/{authId}/direcciones/{direccionId}")
+    public ResponseEntity<?> eliminarDireccion(@PathVariable Long authId, @PathVariable Long direccionId) {
+        // LÍNEA CORREGIDA:
+        var usuarioOpt = usuarioRepository.findByAuthId(authId); 
+        
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            // Remueve la dirección de la lista interna si coincide con el ID solicitado
+            boolean removido = usuario.getDirecciones().removeIf(d -> d.getId().equals(direccionId));
+            
+            if (removido) {
+                usuarioRepository.save(usuario);
+                return ResponseEntity.ok("Dirección eliminada exitosamente de la libreta");
+            } else {
+                return ResponseEntity.badRequest().body("Error: Dirección no encontrada en la libreta del usuario.");
+            }
+        } else {
+            return ResponseEntity.badRequest().body("Error: Usuario no encontrado.");
+        }
+    }
+
+    // Endpoint para marcar una dirección como predeterminada y desmarcar las demás
+    @PatchMapping("/auth/{authId}/direcciones/{direccionId}/predeterminada")
+    public ResponseEntity<?> marcarDireccionPredeterminada(@PathVariable Long authId, @PathVariable Long direccionId) {
+        var usuarioOpt = usuarioRepository.findByAuthId(authId);
+        
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            boolean encontrada = false;
+            
+            for (Direccion dir : usuario.getDirecciones()) {
+                if (dir.getId().equals(direccionId)) {
+                    dir.setPredeterminada(true);
+                    encontrada = true;
+                } else {
+                    dir.setPredeterminada(false);
+                }
+            }
+            
+            if (encontrada) {
+                usuarioRepository.save(usuario);
+                return ResponseEntity.ok("Dirección establecida como predeterminada exitosamente");
+            } else {
+                return ResponseEntity.badRequest().body("Error: Dirección no encontrada en la libreta del usuario.");
+            }
+        } else {
+            return ResponseEntity.badRequest().body("Error: Usuario no encontrado.");
+        }
+    }
 }
 

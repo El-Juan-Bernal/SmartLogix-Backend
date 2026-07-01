@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/perfil")
+// ¡AQUÍ ESTÁ LA MAGIA! Cambiamos /perfil por /usuarios
+@RequestMapping("/api/v1/usuarios") 
 public class BffUsuarioController {
 
     @Autowired
@@ -30,7 +31,7 @@ public class BffUsuarioController {
         }
     }
 
-    @PostMapping("/{authId}/direcciones")
+    @PostMapping("/auth/{authId}/direcciones")
     public ResponseEntity<?> agregarDireccion(@PathVariable Long authId, @RequestBody DireccionDTO dto) {
         try {
             return ResponseEntity.ok(usuarioClient.agregarNuevaDireccion(authId, dto));
@@ -42,18 +43,38 @@ public class BffUsuarioController {
         }
     }
 
-    // Endpoint para listar las direcciones
-    @GetMapping("/{authId}/direcciones")
+    @GetMapping("/auth/{authId}/direcciones")
     public ResponseEntity<?> obtenerDirecciones(@PathVariable Long authId) {
         try {
             List<DireccionDTO> direcciones = usuarioClient.obtenerDireccionesPorAuthId(authId);
             return ResponseEntity.ok(direcciones);
         } catch (FeignException.NotFound e) {
-            // Si no tiene direcciones o el usuario aún no tiene un perfil creado, devolvemos vacío
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al obtener las direcciones: " + e.getMessage());
+        }
+    }
+
+    // --- NUEVO: Endpoint para eliminar ---
+    @DeleteMapping("/auth/{authId}/direcciones/{direccionId}")
+    public ResponseEntity<?> eliminarDireccion(@PathVariable Long authId, @PathVariable Long direccionId) {
+        try {
+            return ResponseEntity.ok(usuarioClient.eliminarDireccion(authId, direccionId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al eliminar la dirección: " + e.getMessage());
+        }
+    }
+
+    // --- NUEVO: Endpoint para marcar como predeterminada ---
+    @PatchMapping("/auth/{authId}/direcciones/{direccionId}/predeterminada")
+    public ResponseEntity<?> marcarPredeterminada(@PathVariable Long authId, @PathVariable Long direccionId) {
+        try {
+            return ResponseEntity.ok(usuarioClient.marcarDireccionPredeterminada(authId, direccionId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar la dirección: " + e.getMessage());
         }
     }
 }

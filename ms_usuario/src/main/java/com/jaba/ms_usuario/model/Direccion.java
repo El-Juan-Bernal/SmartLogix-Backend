@@ -30,11 +30,10 @@ public class Direccion {
     @NotBlank(message = "El número es obligatorio")
     private String numero;
 
+    private boolean predeterminada;
+
     // OPCIONAL
     private String departamento; 
-
-    // Indica si es la dirección por defecto del usuario
-    private boolean esPrincipal; 
 
     // Relación Muchos a Uno (Muchas direcciones pertenecen a un Usuario)
     @ManyToOne(fetch = FetchType.LAZY)
