@@ -11,11 +11,12 @@ import java.util.Map;
 @FeignClient(name = "ms-pagos", url = "${url.ms.pagos}")
 public interface PagosClient {
 
-    @GetMapping("/{id}")
+    @GetMapping("/api/v1/pagos/{id}")
     Map<String, Object> obtenerPagoPorId(@PathVariable("id") Long id);
 
     // Actualizado: Ahora apunta a la ruta /procesar y envía el objeto en el cuerpo
-    @PostMapping("/procesar")
+    @PostMapping("/api/v1/pagos/procesar")
     Map<String, Object> procesarPago(@RequestBody PagoRequestDTO pago);
 }
 
+// comentario para forzar actualización en Docker. 
