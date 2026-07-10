@@ -51,7 +51,7 @@ public class AuthController {
                 Map<String, Object> response = new HashMap<>();
                 
                 // NUEVO: Generamos el token firmado digitalmente
-                String token = jwtUtil.generateToken(usuario.getEmail());
+                String token = jwtUtil.generateToken(usuario.getEmail(), usuario.getRol());
                 
                 response.put("token", token);
                 response.put("usuario", usuario); 

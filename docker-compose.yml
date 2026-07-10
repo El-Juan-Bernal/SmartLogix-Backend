@@ -154,6 +154,17 @@ services:
       - smartlogix_net
 
   # 11. FRONTEND
+  frontend:
+    build: 
+      context: ./SmartLogix-Frontend # Aquí le decimos que la carpeta es esta
+      dockerfile: Dockerfile         # Y aquí le decimos que el archivo está ahí dentro
+    container_name: frontend_app
+    ports:
+      - "5173:80"
+    depends_on:
+      - ms-bff
+    networks:
+      - smartlogix_net
 
 networks:
   smartlogix_net:
