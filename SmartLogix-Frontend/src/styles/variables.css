@@ -1,0 +1,41 @@
+:root {
+  /* Fondos */
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-tertiary: #1a1a2e;
+
+  /* Acentos neon */
+  --accent-purple: #7c3aed;
+  --accent-blue: #3b82f6;
+  --accent-glow: #a855f7;
+
+  /* Textos */
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+
+  /* Estados */
+  --color-error: #ef4444;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+
+  /* Bordes */
+  --border-color: #2d2d44;
+  --border-glow: rgba(124, 58, 237, 0.5);
+
+  /* Sombras neon */
+  --shadow-purple: 0 0 20px rgba(124, 58, 237, 0.3);
+  --shadow-blue: 0 0 20px rgba(59, 130, 246, 0.3);
+
+  /* Tipografías */
+  --font-title: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Bordes redondeados */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  /* Transiciones */
+  --transition: all 0.2s ease;
+}

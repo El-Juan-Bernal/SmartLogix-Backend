@@ -1,0 +1,507 @@
+.main {
+  min-height: 100vh;
+}
+
+/* =========================================
+   HERO
+========================================= */
+.hero {
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  padding: 80px 24px;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 60% 50%, rgba(124, 58, 237, 0.15) 0%, transparent 60%),
+              radial-gradient(ellipse at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+  background-size: 200% 200%;
+  animation: gradientMove 15s ease infinite;
+}
+
+.heroContent {
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+  z-index: 1;
+}
+
+.heroBadge {
+  display: inline-block;
+  background: rgba(124, 58, 237, 0.15);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  color: var(--accent-glow);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 6px 16px;
+  border-radius: 999px;
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease-out forwards;
+}
+
+.heroTitle {
+  font-family: var(--font-title);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+  opacity: 0;
+  animation: fadeUp 0.8s ease-out 0.2s forwards;
+}
+
+.heroAccent {
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.heroSubtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 500px;
+  line-height: 1.6;
+  margin-bottom: 36px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease-out 0.4s forwards;
+}
+
+.heroBtns {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.8s ease-out 0.6s forwards;
+}
+
+.heroGlow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 70%);
+  right: -100px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* =========================================
+   BOTONES
+========================================= */
+.btnPrimario {
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 14px 32px;
+  border-radius: var(--radius-md);
+  transition: var(--transition);
+  box-shadow: var(--shadow-purple);
+}
+
+.btnPrimario:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 40px rgba(124, 58, 237, 0.5);
+}
+
+.btnSecundario {
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 14px 32px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.btnSecundario:hover {
+  border-color: var(--accent-purple);
+  color: var(--accent-purple);
+}
+
+/* =========================================
+   CONTADORES
+========================================= */
+.contadores {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  padding: 40px 24px;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.contador {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.contadorNumero {
+  font-family: var(--font-mono);
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.contadorLabel {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.contadorDivider {
+  width: 1px;
+  height: 60px;
+  background: var(--border-color);
+}
+
+/* =========================================
+   SECCIÓN GENERAL
+========================================= */
+.seccion {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 64px 24px;
+}
+
+.seccionTitulo {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  color: var(--text-primary);
+}
+
+.accent {
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* =========================================
+   CARRUSEL 3D
+========================================= */
+.carruselContenedor {
+  position: relative;
+  width: 100%;
+  max-width: 1600px; 
+  height: 600px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin: 60px auto; 
+}
+
+.carruselPista {
+  position: relative;
+  width: 100%;
+  max-width: 1200px; 
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1200px; 
+}
+
+.carruselItem {
+  position: absolute;
+  width: 380px; 
+  height: auto; 
+  /* FIX 1: Quitamos 'filter' de la transición */
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+              
+  /* FIX 2: Quitamos 'filter' del will-change */
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  
+  opacity: 0;
+  z-index: 1;
+  /* FIX 3: Agregamos translateZ(0) para forzar nitidez 3D real */
+  transform: scale(0.6) translateX(0) translateZ(0);
+  pointer-events: none;
+}
+
+/* Estados del Carrusel */
+.centro {
+  opacity: 1;
+  transform: scale(1.15) translateX(0) translateZ(0); 
+  z-index: 3;
+  pointer-events: auto;
+  box-shadow: 0 20px 60px rgba(124, 58, 237, 0.4); 
+  /* Puedes borrar el filter: brightness(1.1) si lo tenías */
+}
+
+/* Estado: Izquierda */
+.izquierda {
+  opacity: 0.45; /* Usamos solo opacidad para "apagar" la tarjeta */
+  transform: scale(0.85) translateX(-105%) translateZ(0); /* translateZ(0) mantiene el texto nítido */
+  z-index: 2;
+  pointer-events: auto;
+  cursor: pointer;
+  /* IMPORTANTE: Borra cualquier línea de 'filter: brightness(...)' que tengas aquí */
+}
+
+/* Estado: Derecha */
+.derecha {
+  opacity: 0.45; 
+  transform: scale(0.85) translateX(105%) translateZ(0); 
+  z-index: 2;
+  pointer-events: auto;
+  cursor: pointer;
+  /* IMPORTANTE: Borra cualquier línea de 'filter: brightness(...)' que tengas aquí */
+}
+
+.oculto {
+  opacity: 0;
+  transform: scale(0.5) translateX(0);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Botones del Carrusel */
+.carruselBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(8px);
+  color: var(--text-primary);
+  border: 1px solid var(--accent-purple);
+  width: 55px; 
+  height: 55px;
+  border-radius: 50%;
+  font-size: 1.4rem;
+  z-index: 10;
+  transition: var(--transition);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.carruselBtn:hover {
+  background: var(--accent-purple);
+  color: white;
+  box-shadow: var(--shadow-purple);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.btnLeft {
+  left: 4%; 
+}
+
+.btnRight {
+  right: 4%; 
+}
+
+/* =========================================
+   CARDS (Fallback visual si se usan en Home)
+========================================= */
+.card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.card:hover {
+  border-color: var(--accent-purple);
+  box-shadow: var(--shadow-purple);
+  transform: translateY(-4px);
+}
+
+.cardImagen {
+  width: 100%;
+  height: 160px;
+  background: linear-gradient(135deg, var(--bg-tertiary), rgba(124, 58, 237, 0.1));
+}
+
+.cardInfo {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardCategoria {
+  font-size: 0.75rem;
+  color: var(--accent-purple);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+.cardNombre {
+  font-family: var(--font-title);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.cardPrecio {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-glow);
+}
+
+.btnCarrito {
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  width: 100%;
+  margin-top: 4px;
+  transition: var(--transition);
+}
+
+.btnCarrito:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* =========================================
+   SKELETONS Y ESTADOS DE CARGA/ERROR
+========================================= */
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.skeletonCard {
+  height: 300px;
+  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 48px;
+  color: var(--color-error);
+}
+
+.btnReintentar {
+  background: transparent;
+  border: 1px solid var(--color-error);
+  color: var(--color-error);
+  padding: 10px 24px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.btnReintentar:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* =========================================
+   ANIMACIONES (KEYFRAMES)
+========================================= */
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+  0% { transform: translateY(-50%) scale(1); opacity: 0.5; }
+  50% { transform: translateY(-50%) scale(1.2); opacity: 1; }
+  100% { transform: translateY(-50%) scale(1); opacity: 0.5; }
+}
+
+@keyframes floating {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* =========================================
+   MEDIA QUERIES (MÓVILES)
+========================================= */
+@media (max-width: 768px) {
+  .hero {
+    min-height: 60vh;
+    padding: 60px 24px;
+  }
+  .contadores {
+    gap: 24px;
+  }
+  .contadorNumero {
+    font-size: 1.8rem;
+  }
+  .carruselContenedor { 
+    height: 500px; 
+    margin: 40px auto; 
+  }
+  .carruselItem { 
+    width: 280px; 
+  }
+  .centro { 
+    transform: scale(1.05) translateX(0); 
+  }
+  .izquierda { 
+    transform: scale(0.8) translateX(-85%); 
+  }
+  .derecha { 
+    transform: scale(0.8) translateX(85%); 
+  }
+  .carruselBtn { 
+    width: 45px; 
+    height: 45px; 
+    font-size: 1.2rem; 
+  }
+  .btnLeft { 
+    left: 2%; 
+  }
+  .btnRight { 
+    right: 2%; 
+  }
+}
+
+/* =========================================
+   GRILLA DE PRODUCTOS (NUEVA SECCIÓN)
+========================================= */
+.gridProductos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+  width: 100%;
+  margin-top: 40px;
+}
