@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/productos")
@@ -93,6 +94,40 @@ public class ProductoController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
+    // Marcar / desmarcar un producto como destacado (sección Promociones)
+    @PutMapping("/{id}/destacado")
+    public ResponseEntity<?> actualizarDestacado(@PathVariable Long id, @RequestBody Map<String, Boolean> body) {
+        return productoRepository.findById(id).map(producto -> {
+            producto.setDestacado(Boolean.TRUE.equals(body.get("destacado")));
+            return ResponseEntity.ok(productoRepository.save(producto));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    // Fijar (o quitar) el precio de oferta de un producto
+    @PutMapping("/{id}/oferta")
+    public ResponseEntity<?> actualizarOferta(@PathVariable Long id, @RequestBody Map<String, Integer> body) {
+        return productoRepository.findById(id).map(producto -> {
+            Integer precioOferta = body.get("precioOferta");
+            producto.setPrecioOferta(precioOferta);
+            producto.setEnOferta(precioOferta != null);
+            return ResponseEntity.ok(productoRepository.save(producto));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    // Ajustar solo el stock, sin tener que mandar el producto completo
+    // (esto es lo que usa el panel de Inventario para sumar/restar/editar directo)
+    @PutMapping("/{id}/stock")
+    public ResponseEntity<?> actualizarStock(@PathVariable Long id, @RequestBody Map<String, Integer> body) {
+        Integer nuevoStock = body.get("stock");
+        if (nuevoStock == null || nuevoStock < 0) {
+            return ResponseEntity.badRequest().body("El stock debe ser un número mayor o igual a 0.");
+        }
+        return productoRepository.findById(id).map(producto -> {
+            producto.setStock(nuevoStock);
+            return ResponseEntity.ok(productoRepository.save(producto));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
     // Eliminar un producto físicamente de la base de datos
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarProductoFisicamente(@PathVariable Long id) {
@@ -102,5 +137,4 @@ public class ProductoController {
         }).orElse(ResponseEntity.notFound().build());
     }
 }
-
 

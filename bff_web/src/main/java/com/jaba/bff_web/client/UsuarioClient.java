@@ -14,6 +14,9 @@ public interface UsuarioClient {
     @PutMapping("/completar/{authId}")
     Map<String, Object> completarPerfil(@PathVariable("authId") Long authId, @RequestBody ActualizarPerfilDTO dto);
 
+    @GetMapping("/auth/{authId}")
+    Map<String, Object> obtenerPerfilPorAuthId(@PathVariable("authId") Long authId);
+
     @PostMapping("/auth/{authId}/direcciones")
     String agregarNuevaDireccion(@PathVariable("authId") Long authId, @RequestBody DireccionDTO nuevaDireccion);
 
@@ -24,7 +27,7 @@ public interface UsuarioClient {
     @DeleteMapping("/auth/{authId}/direcciones/{direccionId}")
     String eliminarDireccion(@PathVariable("authId") Long authId, @PathVariable("direccionId") Long direccionId);
 
-    @PatchMapping("/auth/{authId}/direcciones/{direccionId}/predeterminada")
+    @PutMapping("/auth/{authId}/direcciones/{direccionId}/predeterminada")
     String marcarDireccionPredeterminada(@PathVariable("authId") Long authId, @PathVariable("direccionId") Long direccionId);
 }
 

@@ -111,6 +111,39 @@ public class BffCatalogoController {
         }
     }
 
+    @PutMapping("/{id}/destacado")
+    public ResponseEntity<?> actualizarDestacado(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        try {
+            return ResponseEntity.ok(catalogoClient.actualizarDestacado(id, body));
+        } catch (FeignException.NotFound e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no encontrado.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar destacado: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}/oferta")
+    public ResponseEntity<?> actualizarOferta(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        try {
+            return ResponseEntity.ok(catalogoClient.actualizarOferta(id, body));
+        } catch (FeignException.NotFound e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no encontrado.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar oferta: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}/stock")
+    public ResponseEntity<?> actualizarStock(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        try {
+            return ResponseEntity.ok(catalogoClient.actualizarStock(id, body));
+        } catch (FeignException.NotFound e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no encontrado.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar stock: " + e.getMessage());
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarProductoFisicamente(@PathVariable Long id) {
         try {
