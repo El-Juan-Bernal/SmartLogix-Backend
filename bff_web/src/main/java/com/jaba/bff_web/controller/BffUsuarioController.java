@@ -31,6 +31,20 @@ public class BffUsuarioController {
         }
     }
 
+    // Este es el que el frontend debe llamar justo despues del login,
+    // para traer nombre/apellido/telefono/imagenPerfil (datos que el login de ms_idp no tiene).
+    @GetMapping("/auth/{authId}")
+    public ResponseEntity<?> obtenerPerfilPorAuthId(@PathVariable Long authId) {
+        try {
+            return ResponseEntity.ok(usuarioClient.obtenerPerfilPorAuthId(authId));
+        } catch (FeignException.NotFound e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener el perfil: " + e.getMessage());
+        }
+    }
+
     @PostMapping("/auth/{authId}/direcciones")
     public ResponseEntity<?> agregarDireccion(@PathVariable Long authId, @RequestBody DireccionDTO dto) {
         try {
@@ -68,7 +82,7 @@ public class BffUsuarioController {
     }
 
     // --- NUEVO: Endpoint para marcar como predeterminada ---
-    @PatchMapping("/auth/{authId}/direcciones/{direccionId}/predeterminada")
+    @PutMapping("/auth/{authId}/direcciones/{direccionId}/predeterminada")
     public ResponseEntity<?> marcarPredeterminada(@PathVariable Long authId, @PathVariable Long direccionId) {
         try {
             return ResponseEntity.ok(usuarioClient.marcarDireccionPredeterminada(authId, direccionId));

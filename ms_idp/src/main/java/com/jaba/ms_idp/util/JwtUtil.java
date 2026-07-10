@@ -26,9 +26,10 @@ public class JwtUtil {
     }
 
     // El método principal que llamaremos desde el controlador
-    public String generateToken(String email) {
+    public String generateToken(String email, String rol) {
         return Jwts.builder()
                 .subject(email) // El "dueño" del token (en este caso, el correo)
+                .claim("rol", rol) // Para que a futuro el backend también pueda validar el rol
                 .issuedAt(new Date(System.currentTimeMillis())) // Fecha de emisión
                 .expiration(new Date(System.currentTimeMillis() + expiration)) // Fecha de caducidad
                 .signWith(getSigningKey()) // La firma digital irrefutable

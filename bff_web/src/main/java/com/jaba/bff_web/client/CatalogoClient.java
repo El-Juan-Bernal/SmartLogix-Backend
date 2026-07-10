@@ -39,6 +39,18 @@ public interface CatalogoClient {
     @PatchMapping("/{id}/estado")
     String cambiarEstadoProducto(@PathVariable("id") Long id, @RequestParam("activo") boolean activo);
 
+    // 6b. Marcar/desmarcar como destacado (Promociones)
+    @PutMapping("/{id}/destacado")
+    Map<String, Object> actualizarDestacado(@PathVariable("id") Long id, @RequestBody Map<String, Object> body);
+
+    // 6c. Fijar precio de oferta (Promociones)
+    @PutMapping("/{id}/oferta")
+    Map<String, Object> actualizarOferta(@PathVariable("id") Long id, @RequestBody Map<String, Object> body);
+
+    // 6d. Ajustar stock puntual (Inventario)
+    @PutMapping("/{id}/stock")
+    Map<String, Object> actualizarStock(@PathVariable("id") Long id, @RequestBody Map<String, Object> body);
+
     // 7. Eliminar producto físicamente
     @DeleteMapping("/{id}")
     String eliminarProductoFisicamente(@PathVariable("id") Long id);

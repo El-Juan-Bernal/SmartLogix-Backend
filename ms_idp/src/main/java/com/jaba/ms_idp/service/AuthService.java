@@ -30,6 +30,7 @@ public class AuthService {
         nuevoUsuario.setUsername(dto.getUsername());
         nuevoUsuario.setEmail(dto.getEmail());
         nuevoUsuario.setPassword(passwordEncoder.encode(dto.getPassword())); // Encriptación segura
+        nuevoUsuario.setRol("user"); // Todo registro público entra como 'user', nunca 'admin'
 
         UsuarioAuth usuarioGuardado = usuarioAuthRepository.save(nuevoUsuario);
 

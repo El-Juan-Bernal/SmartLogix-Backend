@@ -41,6 +41,21 @@ public class UsuarioController {
         }
     }
 
+    // Endpoint para obtener el perfil completo de un usuario a partir de su authId
+    // (el mismo id que devuelve ms_idp al hacer login). Esto es lo que faltaba:
+    // sin esto, el frontend no tiene forma de recuperar nombre/apellido/telefono/imagen
+    // después de un login nuevo.
+    @GetMapping("/auth/{authId}")
+    public ResponseEntity<?> obtenerPerfilPorAuthId(@PathVariable Long authId) {
+        var usuarioOpt = usuarioRepository.findByAuthId(authId);
+
+        if (usuarioOpt.isPresent()) {
+            return ResponseEntity.ok(usuarioOpt.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping
     public ResponseEntity<?> crearPerfil(@Valid @RequestBody Usuario usuario) {
         if (usuario.getDirecciones() != null) {
@@ -106,7 +121,7 @@ public class UsuarioController {
     }
 
     // Endpoint para marcar una dirección como predeterminada y desmarcar las demás
-    @PatchMapping("/auth/{authId}/direcciones/{direccionId}/predeterminada")
+    @PutMapping("/auth/{authId}/direcciones/{direccionId}/predeterminada")
     public ResponseEntity<?> marcarDireccionPredeterminada(@PathVariable Long authId, @PathVariable Long direccionId) {
         var usuarioOpt = usuarioRepository.findByAuthId(authId);
         
