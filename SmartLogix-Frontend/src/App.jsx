@@ -24,6 +24,7 @@ import { DireccionesProvider } from './context/DireccionesContext'
 import { HistorialProvider } from './context/HistorialContext'
 import { ProductosProvider } from './context/ProductosContext'
 import { PedidosProvider } from './context/PedidosContext'
+import ScrollToTop from './components/ScrollToTop'
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
             <DireccionesProvider>
               <HistorialProvider>
                 <BrowserRouter>
+                  <ScrollToTop />
                   <Routes>
                     <Route path="/" element={<Layout />}>
                       <Route index element={<Home />} />
